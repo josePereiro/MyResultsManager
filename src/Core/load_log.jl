@@ -1,0 +1,1 @@
+load_log(tree::ResDirTree) = read(logfile(tree), String);

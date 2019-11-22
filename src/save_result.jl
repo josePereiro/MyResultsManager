@@ -1,44 +1,48 @@
-function save_result(tree::ResDirTree, data;
+function save_result(res_dir::String, data;
         overwrite::Bool = false, 
         comment = "", 
         sources::Vector{String} = Vector{String}(),
         verbose = true)
 
+    # Tree
+    tree = Core.ResDirTree(res_dir);
+
     # Dirs
     if !overwrite && isdir(tree)
-        error("$(resdir(tree)) already exist, to overwrite you must explicitly use the keyword!!!"); 
+        error("$(Core.resdir(tree)) already exist, to overwrite you must explicitly use the keyword!!!"); 
     elseif !isdir(tree)
-        mkpath(resdir(tree));
-        verbose && info("$(resdir(tree)) created!!!")
+        mkpath(Core.resdir(tree));
+        verbose && info("$(Core.resdir(tree)) created!!!")
     else
-        verbose && info("$(resdir(tree)) overwritten!!!")
+        verbose && info("$(Core.resdir(tree)) overwritten!!!")
     end
-    mkpath(sourcedir(tree));
+    mkpath(Core.sourcedir(tree));
 
     # Description
-    desc = build_description(comment, sources);
-    write(descfile(tree), desc);
-    add_to_log(tree, desc);
+    desc = Core.build_description(comment, sources);
+    Core.save_desc(tree, desc);
+    Core.add_to_log(tree, desc);
 
     # Data
-    save_data(datafile(tree), data);
+    Core.save_data(tree, data);
 
     # sources
     for src in sources
         if isdir(src)
-            copied = MyTools.copy_folder_gitless(src, sourcedir(tree), 
-                follow_symlinks = true);
+            copied = MyTools.copy_folder_gitless(src, Core.sourcedir(tree), 
+                follow_symlinks = true, overwrite = overwrite);
             if verbose 
-                info("copying: $(src) to $(sourcedir(tree))");
+                info("copying: $(src) to $(Core.sourcedir(tree))");
             end
         elseif isfile(src)
-            cd(src, sourcedir(tree), follow_symlinks = true)
-            verbose && info("copying: $(src) to $(sourcedir(tree))");
+            cd(src, Core.sourcedir(tree), follow_symlinks = true, 
+                remove_destination = overwrite)
+            verbose && info("copying: $(src) to $(Core.sourcedir(tree))");
             
         else
-            ms = "Error: copying: $(src) to $(sourcedir(tree)) fails!!!"
+            ms = "Error: copying: $(src) to $(Core.sourcedir(tree)) fails!!!"
             verbose && warn(ms);
-            add_to_log(tree, ms);
+            Core.add_to_log(tree, ms);
         end
     end
 
