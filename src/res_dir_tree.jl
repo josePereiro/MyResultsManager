@@ -4,12 +4,11 @@ const desc_file_name = "description"
 struct ResDirTree
     root_dir::AbstractString;
     base_name::AbstractString;
-    function ResDirTree(root_dir, base_name)
+    ResDirTree(root_dir, base_name) =
         new(root_dir, basename(base_name));
-    end
+    ResDirTree(res_dir) = 
+        new(dirname(res_dir), basename(res_dir));
 end
-
-ResDirTree(base_name) = ResDirTree("", base_name);
 
 get_base_name(tree::ResDirTree) = tree.base_name;
 get_root_dir(tree::ResDirTree) = tree.root_dir;
