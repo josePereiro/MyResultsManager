@@ -1,12 +1,12 @@
-function add_to_log(tree, text)
-    l = logfile(tree);
-    if isfile(l)
-        text = "$(now()) \n $(text) \n";
-        write(st, text);
-    else
-        st = open(l, "a");
-        text = "\n $(now()) \n $(text) \n";
+function add_to_log(tree::ResDirTree, text::String)
+    lfile = logfile(tree);
+    if isfile(lfile)
+        st = open(lfile, "a");
+        text = "\n$(text)\n";
         write(st, text);
         close(st);
+    else
+        text = "$(text)\n";
+        write(lfile, text);
     end
 end
