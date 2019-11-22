@@ -1,5 +1,5 @@
 module MyResultsManager
 
-# package code goes here
+include("res_dir_tree.jl");
 
 end # module
