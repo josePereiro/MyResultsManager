@@ -19,7 +19,7 @@ function save_result(res_dir::String, data;
     mkpath(Core.sourcedir(tree));
 
     # Description
-    desc = Core.build_description(comment, sources);
+    desc = Core.build_description(res_dir, comment, sources);
     Core.save_desc(tree, desc);
     Core.add_to_log(tree, desc);
 
