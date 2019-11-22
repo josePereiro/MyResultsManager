@@ -1,16 +1,21 @@
-const deps_dir_name = "source";
-const desc_file_name = "description"
+const source_dir_name = "source";
+const desc_file_name = "description";
+const log_file_name = "log";
+
 
 struct ResDirTree
-    root_dir::AbstractString;
-    base_name::AbstractString;
-    ResDirTree(root_dir, base_name) =
-        new(root_dir, basename(base_name));
+    dirname::AbstractString;
+    basename::AbstractString;
+    ResDirTree(dir_name, base_name) =
+        new(dir_name, basename(base_name));
     ResDirTree(res_dir) = 
         new(dirname(res_dir), basename(res_dir));
 end
 
-get_base_name(tree::ResDirTree) = tree.base_name;
-get_root_dir(tree::ResDirTree) = tree.root_dir;
-get_res_dir(tree::ResDirTree) = joinpath(get_root_dir(tree), get_base_name(tree));
-get_desc_file(tree::ResDirTree) = joinpath(get_res_dir(tree), desc_file_name);
+Base.basename(tree::ResDirTree) = tree.basename;
+Base.dirname(tree::ResDirTree) = tree.dirname;
+Base.isdir(tree::ResDirTree) = isdir(dirname(tree))
+resdir(tree::ResDirTree) = joinpath(dirname(tree), basename(tree));
+descfile(tree::ResDirTree) = joinpath(resdir(tree), desc_file_name);
+logfile(tree::ResDirTree) = joinpath(resdir(tree), log_file_name);
+sourcedir(tree::ResDirTree) = joinpath(resdir(tree), source_dir_name);
