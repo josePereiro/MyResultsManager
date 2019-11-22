@@ -1,6 +1,7 @@
 module Core
 
 import FileIO;
+import CSV;
 
 include("res_dir_tree.jl");
 include("add_to_log.jl");
