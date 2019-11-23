@@ -6,44 +6,52 @@ function save_result(res_dir::String, data;
 
     # Tree
     tree = Core.ResDirTree(res_dir);
-
-    # Dirs
     if !overwrite && isdir(tree)
         error("$(Core.resdir(tree)) already exist, to overwrite you must explicitly use the keyword!!!"); 
-    elseif !isdir(tree)
-        mkpath(Core.resdir(tree));
-        verbose && info("$(Core.resdir(tree)) created!!!")
-    else
-        verbose && info("$(Core.resdir(tree)) overwritten!!!")
     end
-    mkpath(Core.sourcedir(tree));
 
-    # Description
-    desc = Core.build_description(res_dir, comment, sources);
-    Core.save_desc(tree, desc);
-    Core.add_to_log(tree, desc);
-
-    # sources
-    for src in sources
-        if isdir(src)
-            copied = MyTools.copy_folder_gitless(src, Core.sourcedir(tree), 
-                follow_symlinks = true, overwrite = overwrite);
-            if verbose 
-                info("copying: $(src) to $(Core.sourcedir(tree))");
-            end
-        elseif isfile(src)
-            cp(src, Core.sourcedir(tree), follow_symlinks = true, 
-                remove_destination = overwrite)
-            verbose && info("copying: $(src) to $(Core.sourcedir(tree))");
-            
+    try 
+        # Dirs
+        if !isdir(tree)
+            mkpath(Core.resdir(tree));
+            verbose && info("$(Core.resdir(tree)) created!!!")
         else
-            ms = "Error: copying: $(src) to $(Core.sourcedir(tree)) fails!!!"
-            verbose && warn(ms);
-            Core.add_to_log(tree, ms);
+            verbose && info("$(Core.resdir(tree)) overwritten!!!")
         end
+        mkpath(Core.sourcedir(tree));
+
+        # Description
+        desc = Core.build_description(res_dir, comment, sources);
+        Core.save_desc(tree, desc);
+        Core.add_to_log(tree, desc);
+
+        # sources
+        for src in sources
+            if isdir(src)
+                copied = MyTools.copy_folder_gitless(src, Core.sourcedir(tree), 
+                    follow_symlinks = true, overwrite = overwrite);
+                if verbose 
+                    info("copying: $(src) to $(Core.sourcedir(tree))");
+                end
+            elseif isfile(src)
+                cp(src, Core.sourcedir(tree), follow_symlinks = true, 
+                    remove_destination = overwrite)
+                verbose && info("copying: $(src) to $(Core.sourcedir(tree))");
+                
+            else
+                ms = "Warn: copying: $(src) to $(Core.sourcedir(tree)) fails!!!"
+                verbose && warn(ms);
+                Core.add_to_log(tree, ms);
+            end
+        end
+
+        # Data
+        Core.save_data(tree, data);
+    catch err
+        if !overwrite
+            rm(Core.resdir(tree), force = true, recursive = false);
+        end
+        throw(err);
     end
 
-     # Data
-     Core.save_data(tree, data);
-     
 end
