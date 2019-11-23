@@ -1,7 +1,7 @@
-const source_dir_name = "source";
-const desc_file_name = "description.txt";
-const log_file_name = "log.txt";
-const data_file_name = "data.jld2";
+const source_dir_name = "source.myresults";
+const desc_file_name = "description.myresults.txt";
+const log_file_name = "log.myresults.txt";
+const data_file_name = "data.myresults.jld2";
 
 
 struct ResDirTree
