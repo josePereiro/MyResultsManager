@@ -29,14 +29,15 @@ function save_result(res_dir::String, data;
         # sources
         for src in sources
             if isdir(src)
-                copied = MyTools.copy_folder_gitless(src, Core.sourcedir(tree), 
+                MyTools.copy_folder_gitless(src, Core.sourcedir(tree), 
                     follow_symlinks = true, overwrite = overwrite);
                 if verbose 
                     info("copying: $(src) to $(Core.sourcedir(tree))");
                 end
             elseif isfile(src)
-                cp(src, Core.sourcedir(tree), follow_symlinks = true, 
-                    remove_destination = true)
+                dest = joinpath(Core.sourcedir(tree), basename(src));
+                cp(src, dest, follow_symlinks = true, 
+                    remove_destination = overwrite)
                 verbose && info("copying: $(src) to $(Core.sourcedir(tree))");
                 
             else

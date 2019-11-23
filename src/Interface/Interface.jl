@@ -1,5 +1,5 @@
 include("save_result.jl");
-include("open_in_finder.jl");
+include("open_externally.jl");
 include("print_log.jl");
 include("print_description.jl");
 include("load_result.jl");
@@ -7,3 +7,4 @@ include("rename.jl");
 include("print_all_descriptions.jl");
 include("find_results.jl");
 include("amend_description.jl");
+include("res_dir_tree.jl");
