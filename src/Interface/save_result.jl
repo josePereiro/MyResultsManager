@@ -11,6 +11,7 @@ function save_result(res_dir::String, data;
     end
 
     try 
+
         # Dirs
         if !isdir(tree)
             mkpath(Core.resdir(tree));
@@ -35,7 +36,7 @@ function save_result(res_dir::String, data;
                 end
             elseif isfile(src)
                 cp(src, Core.sourcedir(tree), follow_symlinks = true, 
-                    remove_destination = overwrite)
+                    remove_destination = true)
                 verbose && info("copying: $(src) to $(Core.sourcedir(tree))");
                 
             else
@@ -49,7 +50,7 @@ function save_result(res_dir::String, data;
         Core.save_data(tree, data);
     catch err
         if !overwrite
-            rm(Core.resdir(tree), force = true, recursive = false);
+            rm(Core.resdir(tree), force = true, recursive = true);
         end
         throw(err);
     end
