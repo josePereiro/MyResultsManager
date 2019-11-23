@@ -23,9 +23,6 @@ function save_result(res_dir::String, data;
     Core.save_desc(tree, desc);
     Core.add_to_log(tree, desc);
 
-    # Data
-    Core.save_data(tree, data);
-
     # sources
     for src in sources
         if isdir(src)
@@ -46,4 +43,7 @@ function save_result(res_dir::String, data;
         end
     end
 
+     # Data
+     Core.save_data(tree, data);
+     
 end
