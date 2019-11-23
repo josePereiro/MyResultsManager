@@ -35,7 +35,7 @@ function save_result(res_dir::String, data;
                 info("copying: $(src) to $(Core.sourcedir(tree))");
             end
         elseif isfile(src)
-            cd(src, Core.sourcedir(tree), follow_symlinks = true, 
+            cp(src, Core.sourcedir(tree), follow_symlinks = true, 
                 remove_destination = overwrite)
             verbose && info("copying: $(src) to $(Core.sourcedir(tree))");
             
